@@ -1,0 +1,174 @@
+/* ===== PAGE WRAPPER ===== */
+.skillpage {
+  min-height: 100vh;
+  padding: 120px 8vw 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 70px;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 1) 0%,
+    rgba(18, 18, 28, 1) 100%
+  );
+}
+
+/* ===== HEADER ===== */
+.skill-header {
+  text-align: center;
+  max-width: 720px;
+  z-index: 1;
+}
+
+.section-tag {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(199, 210, 254, 0.85);
+}
+
+.skill-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 18px;
+  letter-spacing: -1.5px;
+
+  background: linear-gradient(135deg, #ffffff, #c7d2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.skill-header p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ===== SKILL CONTENT ===== */
+.skill-content {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  z-index: 1;
+}
+
+/* ===== SLIDER ===== */
+.skill-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ===== META ===== */
+.slider-meta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.category-name {
+  font-weight: 600;
+  color: rgba(199, 210, 254, 0.9);
+}
+
+/* ===== ANIMATION ===== */
+.skillcard-wrapper {
+  animation: slideFade 0.45s ease both;
+}
+
+.skillcard-wrapper.right {
+  animation-name: slideFromRight;
+}
+
+.skillcard-wrapper.left {
+  animation-name: slideFromLeft;
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== DOTS ===== */
+.slider-dots {
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.dot.active {
+  width: 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+/* ===== NAV BUTTONS ===== */
+.nav-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .skill-header h1 {
+    font-size: 2.3rem;
+  }
+
+  .skill-content {
+    flex-direction: column;
+  }
+}

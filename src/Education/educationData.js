@@ -1,0 +1,38 @@
+export const educationTimeline = [
+  {
+    id: 1,
+    degree: "B.Tech in Computer Engineering",
+    institute: "K J Somaiya Institute of Technology",
+    year: "2022 – 2026",
+    location: "Mumbai, India",
+    coords: [19.046534834029814, 72.87089294772564],
+    score: "8.2 CGPA",
+  },
+  {
+    id: 2,
+    degree: "Higher Secondary (HSC)",
+    institute: "Chate School and Junior College",
+    year: "2018 – 2020",
+    location: "Pune, India",
+    coords: [18.590361403071444, 73.93745558605116],
+    score: "68%",
+  },
+  {
+    id: 3,
+    degree: "Secondary School (SSC)",
+    institute: "Shiv Sharda Public School",
+    year: "2010 – 2018",
+    location: "Georai, Maharashtra",
+    coords: [19.294351387061063, 75.72175490805049],
+    score: "90%",
+  },
+  {
+    id: 4,
+    degree: "Secondary School (SSC)",
+    institute: "Shiv Sharda Public School",
+    year: "2010 – 2018",
+    location: "Georai, Maharashtra",
+    coords: [37.77287003964932, -122.41322817810182],
+    score: "90%",
+  },
+];

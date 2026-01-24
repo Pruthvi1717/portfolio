@@ -1,0 +1,211 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Poppins", sans-serif;
+  
+ 
+}
+
+/* ===== NAVBAR ===== */
+nav {
+  height: 70px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+
+  /* slightly lighter glass for premium feel */
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ===== LOGO ===== */
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* subtle pulse dot */
+.logo::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #667eea;
+  border-radius: 50%;
+  bottom: 8px;
+  right: -12px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* ===== RIGHT SECTION ===== */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+/* ===== NAV LINKS ===== */
+#det {
+  list-style: none;
+  display: flex;
+  gap: 32px;
+}
+
+#det li {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+/* underline */
+#det li::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  left: 50%;
+  bottom: -8px;
+  transform: translateX(-50%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+#det li:hover {
+  color: #ffffff;
+}
+
+#det li:hover::after {
+  width: 100%;
+}
+
+/* ===== SOCIAL MEDIA ===== */
+.socialMedia ul {
+  list-style: none;
+  display: flex;
+  gap: 12px;
+}
+
+.socialMedia li {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.socialMedia li:hover {
+  color: #ffffff;
+  background: rgba(102, 126, 234, 0.12);
+  border-color: rgba(102, 126, 234, 0.25);
+}
+
+.socialMedia a {
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== BUTTON ===== */
+.right button {
+  padding: 10px 24px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  text-transform: none !important;
+
+  background: transparent !important;
+  border: 1.5px solid rgba(102, 126, 234, 0.5) !important;
+  color: #ffffff !important;
+
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.right button:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-color: transparent !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  nav {
+    padding: 0 24px;
+  }
+
+  #det {
+    display: none;
+  }
+
+  .right {
+    gap: 20px;
+  }
+
+  .socialMedia ul {
+    gap: 8px;
+  }
+
+  .socialMedia li {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+}
+
+/* ===== PROJECTS PAGE (kept as-is) ===== */
+.projects-main {
+  width: 100%;
+  height: 100vh;
+  padding-top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 24px;
+}
