@@ -26,13 +26,5 @@ export const educationTimeline = [
     coords: [19.294351387061063, 75.72175490805049],
     score: "90%",
   },
-  {
-    id: 4,
-    degree: "Secondary School (SSC)",
-    institute: "Shiv Sharda Public School",
-    year: "2010 – 2018",
-    location: "Georai, Maharashtra",
-    coords: [37.77287003964932, -122.41322817810182],
-    score: "90%",
-  },
+  
 ];
