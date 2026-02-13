@@ -27,6 +27,15 @@ const projectsData = [
     githubLink: "https://github.com/Pruthvi1717/Weather-Web-App",
   },
   {
+    image: "/ProjectImages/Video.png",
+    title: "Video Conferencing",
+    description:
+      "Built real-time video conferencing application using WebRTC and Socket.io, implementing custom signaling, peer connections, and scalable communication architecture.",
+    skills: ["React", "CSS", "JavaScript", "HTML","Socket.io", "WebRTC"],
+    liveLink: "https://videocalling-s2ty.onrender.com/",
+    githubLink: "https://github.com/Pruthvi1717/VideoConferencing",
+  },
+  {
     image: "/ProjectImages/ecom.png",
     title: "E Commerce Filtering",
     description:
