@@ -28,7 +28,7 @@ const projectsData = [
     githubLink: "https://github.com/Pruthvi1717/VideoConferencing",
   },
   {
-    image: "/ProjectImages/journey.jpg",
+    image: "/ProjectImages/journey.png",
     title: "Personal Diary",
     description:
       "A full-stack journaling app with AI insights, mood tracking, Cloudinary photo memories, and goal progress management.",
