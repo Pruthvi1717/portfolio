@@ -17,15 +17,7 @@ const projectsData = [
     liveLink: "https://stoxlyfront.onrender.com/",
     githubLink: "https://github.com/Pruthvi1717/ZerodhaClone",
   },
-  {
-    image: "/ProjectImages/weather.png",
-    title: "weather web application",
-    description:
-      "A weather forecasting application that provides real-time conditions, forecasts, and location-based weather insights.",
-    skills: ["React", "CSS", "JavaScript", "HTML", "API"],
-    liveLink: "https://weather-web-app-s8f5.onrender.com",
-    githubLink: "https://github.com/Pruthvi1717/Weather-Web-App",
-  },
+  
   {
     image: "/ProjectImages/Video.png",
     title: "Video Conferencing",
@@ -36,6 +28,15 @@ const projectsData = [
     githubLink: "https://github.com/Pruthvi1717/VideoConferencing",
   },
   {
+    image: "/ProjectImages/journey.jpg",
+    title: "Personal Diary",
+    description:
+      "A full-stack journaling app with AI insights, mood tracking, Cloudinary photo memories, and goal progress management.",
+    skills: ["HTML", "CSS", "JavaScript", "OPEN AI", "API", "GEN AI"],
+    liveLink: "https://my-journal-8c0u.onrender.com/",
+    githubLink: "https://github.com/Pruthvi1717/My-Journal",
+  },
+  {
     image: "/ProjectImages/ecom.png",
     title: "E Commerce Filtering",
     description:
@@ -43,6 +44,15 @@ const projectsData = [
     skills: ["React", "CSS", "JavaScript", "HTML"],
     liveLink: "https://ecommercefilteringnewone-m8zkpexrp-pruthvi1717s-projects.vercel.app/",
     githubLink: "https://github.com/Pruthvi1717/ECommerceFiltering",
+  },
+  {
+    image: "/ProjectImages/weather.png",
+    title: "weather web application",
+    description:
+      "A weather forecasting application that provides real-time conditions, forecasts, and location-based weather insights.",
+    skills: ["React", "CSS", "JavaScript", "HTML", "API"],
+    liveLink: "https://weather-web-app-s8f5.onrender.com",
+    githubLink: "https://github.com/Pruthvi1717/Weather-Web-App",
   },
   {
     image: "/ProjectImages/calc.png",
