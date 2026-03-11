@@ -1,4 +1,5 @@
 import "./ProjectCard.css";
+import { motion } from "framer-motion";
 
 const ProjectCard = ({ project }) => {
   if (!project) return null;
@@ -16,7 +17,14 @@ const ProjectCard = ({ project }) => {
   
 
   return (
-    <div className="project-card">
+    <motion.div
+      className="project-card"
+      whileHover={{ y: -10, rotateX: 4, rotateY: -4, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 260, damping: 18 }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+    >
       {/* Image */}
       <div className="project-image">
         <img src={image} alt={title || "Project Image"} />
@@ -64,7 +72,7 @@ const ProjectCard = ({ project }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

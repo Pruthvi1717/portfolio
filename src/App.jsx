@@ -4,14 +4,18 @@ import LeftSide from "./Components/LeftSide";
 import RightSide from "./Components/RightSide";
 import SkillPage from "./Components/Skills/SkillPage";
 import ProjectsMainPage from "./Components/Projects/ProjectsMainPage";
-import "./App.css";
 import EducationDashboard from "./Education/EducationDashboard";
+import Certifications from "./Components/Certifications/Certifications";
+import ChatbotWidget from "./Components/ChatbotWidget";
+import CursorGlow from "./Components/CursorGlow";
+import "./App.css";
 
 const App = () => {
   const [activePage, setActivePage] = useState("home");
 
   return (
     <>
+      <CursorGlow />
       <LandingPage setActivePage={setActivePage} />
 
       {activePage === "home" && (
@@ -40,6 +44,14 @@ const App = () => {
           <EducationDashboard />
         </section>
       )}
+
+      {activePage === "certifications" && (
+        <section className="section">
+          <Certifications />
+        </section>
+      )}
+
+      <ChatbotWidget />
     </>
   );
 };

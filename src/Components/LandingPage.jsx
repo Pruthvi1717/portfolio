@@ -3,18 +3,27 @@ import { FaInstagram, FaFacebook } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { SiLeetcode } from "react-icons/si";
 import Button from "@mui/material/Button";
+import { useState } from "react";
 import "./LandingPage.css";
 
 const LandingPage = ({ setActivePage }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleNavClick = (page) => {
+    setActivePage(page);
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav>
       <div className="logo" style={{ color: "white" }}>Pruthvi</div>
 
       <div className="right">
         <ul id="det">
-          <li onClick={() => setActivePage("home")}>Home</li>
-          <li onClick={() => setActivePage("skills")}>Skills</li>
-          <li onClick={() => setActivePage("projects")}>Projects</li>
+          <li onClick={() => handleNavClick("home")}>Home</li>
+          <li onClick={() => handleNavClick("skills")}>Skills</li>
+          <li onClick={() => handleNavClick("projects")}>Projects</li>
+          <li onClick={() => handleNavClick("certifications")}>Certificates</li>
         </ul>
 
         <div className="socialMedia">
@@ -31,7 +40,29 @@ const LandingPage = ({ setActivePage }) => {
         </div>
 
         <Button variant="outlined">Connect</Button>
+
+        <button
+          type="button"
+          className={`mobile-menu-toggle ${isMenuOpen ? "open" : ""}`}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
+
+      {isMenuOpen && (
+        <div className="mobile-menu">
+          <ul>
+            <li onClick={() => handleNavClick("home")}>Home</li>
+            <li onClick={() => handleNavClick("skills")}>Skills</li>
+            <li onClick={() => handleNavClick("projects")}>Projects</li>
+            <li onClick={() => handleNavClick("certifications")}>Certificates</li>
+          </ul>
+        </div>
+      )}
     </nav>
   );
 };
