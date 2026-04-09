@@ -162,7 +162,16 @@ const getBotReply = (userText) => {
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 
-const ChatbotWidget = () => {
+const SECRET_COMMANDS = [
+  "open locker",
+  "unlock locker",
+  "open the locker",
+  "unlock the locker",
+  "secret locker",
+  "secret code",
+];
+
+const ChatbotWidget = ({ setActivePage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState(DEFAULT_MESSAGES);
   const [input, setInput] = useState("");
@@ -183,9 +192,23 @@ const ChatbotWidget = () => {
     const trimmed = input.trim();
     if (!trimmed) return;
 
-    const userMsg = { sender: "user", text: trimmed };
-    const botMsg = { sender: "bot", text: getBotReply(trimmed) };
+    const normalized = trimmed.toLowerCase();
+    const isSecret = SECRET_COMMANDS.some((command) => normalized.includes(command));
 
+    const userMsg = { sender: "user", text: trimmed };
+
+    if (isSecret) {
+      setActivePage?.("locker");
+      const botMsg = {
+        sender: "bot",
+        text: "Secret locker access granted. Enter the locker password to view hidden documents.",
+      };
+      setMessages((prev) => [...prev, userMsg, botMsg]);
+      setInput("");
+      return;
+    }
+
+    const botMsg = { sender: "bot", text: getBotReply(trimmed) };
     setMessages((prev) => [...prev, userMsg, botMsg]);
     setInput("");
   };

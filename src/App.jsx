@@ -62,7 +62,7 @@ const App = () => {
         </section>
       )}
 
-      <ChatbotWidget />
+      <ChatbotWidget setActivePage={setActivePage} />
     </>
   );
 };
