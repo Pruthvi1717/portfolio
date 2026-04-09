@@ -10,6 +10,7 @@ export default defineConfig({
   server: {
     host,
     port,
+    allowedHosts: ['pruthviraj-ghatul-portfolio.onrender.com'],
   },
   preview: {
     host,
