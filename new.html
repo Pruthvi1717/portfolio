@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Median in Row-Sorted Matrix — Visualizer</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080d;
+    --surface: #0e1017;
+    --surface2: #151720;
+    --border: #1e2130;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #a259ff;
+    --green: #00ff88;
+    --yellow: #ffd700;
+    --text: #e8eaf0;
+    --muted: #5a6080;
+    --low-color: #00e5ff;
+    --high-color: #ff6b35;
+    --mid-color: #a259ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent), var(--accent3), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+  }
+  @media(max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  /* Panel */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .panel-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+  }
+  .btn-primary {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: rgba(0,229,255,0.08); }
+  .btn-secondary {
+    color: var(--accent2);
+    border-color: var(--accent2);
+  }
+  .btn-secondary:hover { background: rgba(255,107,53,0.08); }
+  .btn-ghost {
+    color: var(--muted);
+    border-color: var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .speed-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .speed-control input[type=range] {
+    width: 80px;
+    accent-color: var(--accent3);
+  }
+
+  /* Matrix */
+  .matrix-section { margin-bottom: 20px; }
+  .matrix-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  #matrix-grid {
+    display: inline-grid;
+    gap: 6px;
+  }
+  .mat-cell {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface2);
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    cursor: default;
+  }
+  .mat-cell.scanning {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.08);
+    box-shadow: 0 0 12px rgba(0,229,255,0.2);
+    transform: scale(1.05);
+  }
+  .mat-cell.counted {
+    border-color: var(--green);
+    background: rgba(0,255,136,0.1);
+  }
+  .mat-cell.result {
+    border-color: var(--yellow);
+    background: rgba(255,215,0,0.12);
+    box-shadow: 0 0 16px rgba(255,215,0,0.3);
+    transform: scale(1.1);
+    color: var(--yellow);
+  }
+  .mat-cell .row-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: var(--muted);
+  }
+
+  /* Number line */
+  #number-line-container {
+    margin: 16px 0;
+    position: relative;
+  }
+  .nl-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  #number-line-wrap {
+    position: relative;
+    height: 60px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  #nl-bar {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: rgba(162,89,255,0.12);
+    border-left: 2px solid var(--mid-color);
+    border-right: 2px solid var(--mid-color);
+    transition: all 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .nl-marker {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2px;
+    transition: left 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .nl-marker-label {
+    position: absolute;
+    bottom: 4px;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .nl-tick {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 8px;
+    background: var(--border);
+  }
+  .nl-val {
+    position: absolute;
+    top: 10px;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: var(--muted);
+  }
+
+  /* Binary search pointer row */
+  #bs-pointers {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 14px 0;
+  }
+  .ptr-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 4px;
+    border: 1px solid;
+    font-size: 13px;
+    transition: all 0.3s;
+  }
+  .ptr-badge .ptr-name {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .ptr-badge .ptr-val {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .ptr-low { border-color: var(--low-color); color: var(--low-color); background: rgba(0,229,255,0.06); }
+  .ptr-high { border-color: var(--high-color); color: var(--high-color); background: rgba(255,107,53,0.06); }
+  .ptr-mid { border-color: var(--mid-color); color: var(--mid-color); background: rgba(162,89,255,0.06); }
+  .ptr-count { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.06); }
+  .ptr-desired { border-color: var(--yellow); color: var(--yellow); background: rgba(255,215,0,0.06); }
+
+  /* Upper bound row */
+  #ub-section {
+    margin: 14px 0;
+    padding: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    min-height: 60px;
+    transition: all 0.3s;
+  }
+  .ub-title {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  #ub-array {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .ub-cell {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .ub-cell.ub-l { border-color: var(--low-color); box-shadow: 0 0 8px rgba(0,229,255,0.2); }
+  .ub-cell.ub-r { border-color: var(--high-color); box-shadow: 0 0 8px rgba(255,107,53,0.2); }
+  .ub-cell.ub-mid { border-color: var(--mid-color); background: rgba(162,89,255,0.1); box-shadow: 0 0 8px rgba(162,89,255,0.3); }
+  .ub-cell.ub-lte { background: rgba(0,255,136,0.08); border-color: var(--green); }
+  .ub-cell .ptr-arrow {
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    white-space: nowrap;
+  }
+  #ub-result {
+    margin-left: 10px;
+    font-size: 13px;
+    color: var(--green);
+    align-self: center;
+  }
+
+  /* Log */
+  #log-area {
+    height: 260px;
+    overflow-y: auto;
+    font-size: 12px;
+    line-height: 1.8;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .log-entry {
+    padding: 4px 8px;
+    border-radius: 3px;
+    animation: fadeIn 0.3s ease;
+    border-left: 2px solid transparent;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+  .log-entry.phase { color: var(--accent3); border-left-color: var(--accent3); background: rgba(162,89,255,0.05); font-weight: 600; }
+  .log-entry.info { color: var(--text); border-left-color: var(--border); }
+  .log-entry.highlight { color: var(--accent); border-left-color: var(--accent); }
+  .log-entry.warn { color: var(--yellow); border-left-color: var(--yellow); }
+  .log-entry.success { color: var(--green); border-left-color: var(--green); background: rgba(0,255,136,0.05); font-weight: 700; }
+
+  /* Code panel */
+  .code-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+    max-height: 420px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .code-line {
+    display: block;
+    padding: 1px 4px;
+    border-radius: 2px;
+    transition: background 0.2s;
+    white-space: pre;
+  }
+  .code-line.active {
+    background: rgba(162,89,255,0.18);
+    border-left: 2px solid var(--accent3);
+  }
+  .kw { color: #ff7b9e; }
+  .fn { color: #7dd8f8; }
+  .cm { color: #3d4a5a; }
+  .num { color: #ffd700; }
+  .var { color: #b8e0ff; }
+  .op { color: #ff9e6a; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+
+  /* Algo steps panel */
+  .algo-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .algo-step {
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    align-items: flex-start;
+    transition: all 0.3s;
+  }
+  .algo-step.active-step {
+    border-color: var(--accent3);
+    background: rgba(162,89,255,0.08);
+  }
+  .step-num {
+    font-size: 10px;
+    color: var(--muted);
+    min-width: 16px;
+    margin-top: 1px;
+  }
+  .step-text { color: var(--text); line-height: 1.5; }
+
+  /* Iteration counter */
+  #iter-display {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .iter-badge {
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+  .iter-badge span { color: var(--accent); font-weight: 700; }
+
+  /* Matrix input */
+  .matrix-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+    font-size: 12px;
+  }
+  .matrix-input-row label { color: var(--muted); min-width: 50px; }
+  .matrix-input-row input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .matrix-input-row input:focus { border-color: var(--accent3); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  #result-banner {
+    display: none;
+    text-align: center;
+    padding: 14px;
+    background: rgba(255,215,0,0.06);
+    border: 1px solid var(--yellow);
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    color: var(--yellow);
+    font-weight: 800;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 rgba(255,215,0,0); }
+    50% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="tag">Algorithm Visualizer</div>
+    <h1>Median in a Row-Sorted Matrix</h1>
+    <p>Binary Search on Answer Space — O(n · log(max−min) · log(m))</p>
+  </header>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="btn-play">▶ Play</button>
+    <button class="btn btn-ghost" id="btn-step">Step →</button>
+    <button class="btn btn-secondary" id="btn-reset">↺ Reset</button>
+    <button class="btn btn-ghost" id="btn-custom" onclick="toggleCustom()">✎ Edit Matrix</button>
+    <div class="speed-control">
+      <span>Speed</span>
+      <input type="range" id="speed" min="1" max="5" value="3">
+      <span id="speed-label">3x</span>
+    </div>
+  </div>
+
+  <!-- Custom matrix input -->
+  <div id="custom-section" style="display:none; margin-bottom:16px;">
+    <div class="panel">
+      <div class="panel-title">Custom Matrix Input (rows must be sorted)</div>
+      <div id="row-inputs"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-primary" onclick="applyCustom()">Apply</button>
+        <button class="btn btn-ghost" onclick="toggleCustom()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-banner"></div>
+
+  <div class="layout">
+    <!-- Left: Main visualization -->
+    <div>
+      <!-- Iteration info -->
+      <div id="iter-display">
+        <div class="iter-badge">BS Iteration: <span id="iter-num">—</span></div>
+        <div class="iter-badge">UB calls this iter: <span id="ub-calls">—</span></div>
+        <div class="iter-badge">Total steps: <span id="total-steps">0</span></div>
+      </div>
+
+      <!-- Binary search pointers -->
+      <div id="bs-pointers">
+        <div class="ptr-badge ptr-low"><div class="ptr-name">low</div><div class="ptr-val" id="v-low">—</div></div>
+        <div class="ptr-badge ptr-high"><div class="ptr-name">high</div><div class="ptr-val" id="v-high">—</div></div>
+        <div class="ptr-badge ptr-mid"><div class="ptr-name">mid</div><div class="ptr-val" id="v-mid">—</div></div>
+        <div class="ptr-badge ptr-count"><div class="ptr-name">count</div><div class="ptr-val" id="v-count">—</div></div>
+        <div class="ptr-badge ptr-desired"><div class="ptr-name">desired</div><div class="ptr-val" id="v-desired">—</div></div>
+      </div>
+
+      <!-- Number line -->
+      <div id="number-line-container">
+        <div class="nl-label">Search Range — Number Line</div>
+        <div id="number-line-wrap">
+          <div id="nl-bar"></div>
+        </div>
+      </div>
+
+      <!-- Matrix -->
+      <div class="matrix-section">
+        <div class="matrix-label">Matrix (each row sorted)</div>
+        <div id="matrix-grid"></div>
+        <div class="legend" style="margin-top:12px;">
+          <div class="legend-item"><div class="legend-dot" style="border-color:var(--accent);background:rgba(0,229,255,0.08)"></div>Scanning row</div>
+          <div class="legend-item"><div class="legend-dot" style="border-color:var(--green);background:rgba(0,255,136,0.08)"></div>≤ mid (counted)</div>
+          <div class="legend-item"><div class="legend-dot" style="border-color:var(--yellow);background:rgba(255,215,0,0.1)"></div>Median result</div>
+        </div>
+      </div>
+
+      <!-- Upper bound visualization -->
+      <div id="ub-section">
+        <div class="ub-title">upperBound() — Binary Search on current row</div>
+        <div id="ub-array"></div>
+      </div>
+
+      <!-- Log -->
+      <div class="panel" style="margin-top:16px;">
+        <div class="panel-title">Execution Log</div>
+        <div id="log-area"></div>
+      </div>
+    </div>
+
+    <!-- Right: Code + Steps -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <!-- Code -->
+      <div class="panel">
+        <div class="panel-title">Source Code</div>
+        <div class="code-panel" id="code-panel"></div>
+      </div>
+
+      <!-- Algorithm steps -->
+      <div class="panel">
+        <div class="panel-title">Algorithm Phases</div>
+        <div class="algo-steps" id="algo-steps"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CODE LINES
+// ─────────────────────────────────────────────
+const CODE_LINES = [
+  {id:'l1',  html:`<span class="kw">int</span> <span class="fn">median</span>(<span class="kw">int</span> <span class="var">mat</span>[][]) {`},
+  {id:'l2',  html:`  <span class="kw">int</span> <span class="var">n</span> <span class="op">=</span> <span class="var">mat</span>.length;`},
+  {id:'l3',  html:`  <span class="kw">int</span> <span class="var">m</span> <span class="op">=</span> <span class="var">mat</span>[<span class="num">0</span>].length;`},
+  {id:'l4',  html:``},
+  {id:'l5',  html:`  <span class="kw">int</span> <span class="var">low</span> <span class="op">=</span> Integer.MAX_VALUE;`},
+  {id:'l6',  html:`  <span class="kw">int</span> <span class="var">high</span> <span class="op">=</span> Integer.MIN_VALUE;`},
+  {id:'l7',  html:``},
+  {id:'l8',  html:`  <span class="cm">// Find global min (first of each row) & max (last)</span>`},
+  {id:'l9',  html:`  <span class="kw">for</span>(<span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span>; <span class="var">i</span><span class="op">&lt;</span><span class="var">n</span>; <span class="var">i</span>++) {`},
+  {id:'l10', html:`    <span class="var">low</span> <span class="op">=</span> Math.<span class="fn">min</span>(<span class="var">low</span>, <span class="var">mat</span>[<span class="var">i</span>][<span class="num">0</span>]);`},
+  {id:'l11', html:`    <span class="var">high</span> <span class="op">=</span> Math.<span class="fn">max</span>(<span class="var">high</span>, <span class="var">mat</span>[<span class="var">i</span>][<span class="var">m</span><span class="op">-</span><span class="num">1</span>]);`},
+  {id:'l12', html:`  }`},
+  {id:'l13', html:``},
+  {id:'l14', html:`  <span class="kw">int</span> <span class="var">desired</span> <span class="op">=</span> (<span class="var">n</span><span class="op">*</span><span class="var">m</span><span class="op">+</span><span class="num">1</span>) <span class="op">/</span> <span class="num">2</span>;`},
+  {id:'l15', html:``},
+  {id:'l16', html:`  <span class="kw">while</span>(<span class="var">low</span> <span class="op">&lt;</span> <span class="var">high</span>) {`},
+  {id:'l17', html:`    <span class="kw">int</span> <span class="var">mid</span> <span class="op">=</span> (<span class="var">low</span><span class="op">+</span><span class="var">high</span>) <span class="op">/</span> <span class="num">2</span>;`},
+  {id:'l18', html:`    <span class="kw">int</span> <span class="var">count</span> <span class="op">=</span> <span class="num">0</span>;`},
+  {id:'l19', html:``},
+  {id:'l20', html:`    <span class="kw">for</span>(<span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span>; <span class="var">i</span><span class="op">&lt;</span><span class="var">n</span>; <span class="var">i</span>++) {`},
+  {id:'l21', html:`      <span class="var">count</span> <span class="op">+=</span> <span class="fn">upperBound</span>(<span class="var">mat</span>[<span class="var">i</span>], <span class="var">mid</span>);`},
+  {id:'l22', html:`    }`},
+  {id:'l23', html:``},
+  {id:'l24', html:`    <span class="kw">if</span>(<span class="var">count</span> <span class="op">&lt;</span> <span class="var">desired</span>)`},
+  {id:'l25', html:`      <span class="var">low</span> <span class="op">=</span> <span class="var">mid</span><span class="op">+</span><span class="num">1</span>;`},
+  {id:'l26', html:`    <span class="kw">else</span>`},
+  {id:'l27', html:`      <span class="var">high</span> <span class="op">=</span> <span class="var">mid</span>;`},
+  {id:'l28', html:`  }`},
+  {id:'l29', html:`  <span class="kw">return</span> <span class="var">low</span>;`},
+  {id:'l30', html:`}`},
+  {id:'l31', html:``},
+  {id:'l32', html:`<span class="kw">int</span> <span class="fn">upperBound</span>(<span class="kw">int</span>[] <span class="var">arr</span>, <span class="kw">int</span> <span class="var">target</span>) {`},
+  {id:'l33', html:`  <span class="kw">int</span> <span class="var">l</span><span class="op">=</span><span class="num">0</span>, <span class="var">r</span><span class="op">=</span><span class="var">arr</span>.length;`},
+  {id:'l34', html:`  <span class="kw">while</span>(<span class="var">l</span><span class="op">&lt;</span><span class="var">r</span>) {`},
+  {id:'l35', html:`    <span class="kw">int</span> <span class="var">mid</span> <span class="op">=</span> (<span class="var">l</span><span class="op">+</span><span class="var">r</span>)<span class="op">/</span><span class="num">2</span>;`},
+  {id:'l36', html:`    <span class="kw">if</span>(<span class="var">arr</span>[<span class="var">mid</span>] <span class="op">&lt;=</span> <span class="var">target</span>)`},
+  {id:'l37', html:`      <span class="var">l</span> <span class="op">=</span> <span class="var">mid</span><span class="op">+</span><span class="num">1</span>;`},
+  {id:'l38', html:`    <span class="kw">else</span>`},
+  {id:'l39', html:`      <span class="var">r</span> <span class="op">=</span> <span class="var">mid</span>;`},
+  {id:'l40', html:`  }`},
+  {id:'l41', html:`  <span class="kw">return</span> <span class="var">l</span>;`},
+  {id:'l42', html:`}`},
+];
+
+const ALGO_STEPS = [
+  {id:'s1', text:'Find global min (low) = first element of each row, max (high) = last element of each row'},
+  {id:'s2', text:'Compute desired = (n×m + 1) / 2 — position of the median'},
+  {id:'s3', text:'Binary search on value space: while low < high, compute mid'},
+  {id:'s4', text:'For each row, call upperBound(row, mid) to count values ≤ mid'},
+  {id:'s5', text:'If count < desired → median is bigger → low = mid + 1'},
+  {id:'s6', text:'Else → median is ≤ mid → high = mid'},
+  {id:'s7', text:'When low == high, we found the median!'},
+];
+
+// ─────────────────────────────────────────────
+// DEFAULT MATRIX
+// ─────────────────────────────────────────────
+let MAT = [
+  [1, 3, 5],
+  [2, 6, 9],
+  [3, 6, 9],
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let steps = [];
+let stepIdx = 0;
+let playTimer = null;
+let totalStepsRun = 0;
+
+// ─────────────────────────────────────────────
+// BUILD CODE PANEL
+// ─────────────────────────────────────────────
+function buildCode() {
+  const panel = document.getElementById('code-panel');
+  panel.innerHTML = CODE_LINES.map(l =>
+    `<span class="code-line" id="${l.id}">${l.html || '&nbsp;'}</span>`
+  ).join('\n');
+}
+
+function highlightCode(ids) {
+  CODE_LINES.forEach(l => {
+    const el = document.getElementById(l.id);
+    if (el) el.classList.remove('active');
+  });
+  (ids || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.add('active');
+      el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  });
+}
+
+function buildAlgoSteps() {
+  const container = document.getElementById('algo-steps');
+  container.innerHTML = ALGO_STEPS.map(s =>
+    `<div class="algo-step" id="${s.id}">
+      <div class="step-num">${ALGO_STEPS.indexOf(s)+1}</div>
+      <div class="step-text">${s.text}</div>
+    </div>`
+  ).join('');
+}
+
+function highlightAlgoStep(ids) {
+  ALGO_STEPS.forEach(s => {
+    const el = document.getElementById(s.id);
+    if (el) el.classList.remove('active-step');
+  });
+  (ids||[]).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active-step');
+  });
+}
+
+// ─────────────────────────────────────────────
+// BUILD MATRIX GRID
+// ─────────────────────────────────────────────
+function buildMatrix() {
+  const n = MAT.length, m = MAT[0].length;
+  const grid = document.getElementById('matrix-grid');
+  grid.style.gridTemplateColumns = `repeat(${m}, 52px)`;
+  grid.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'mat-cell';
+      cell.id = `cell-${i}-${j}`;
+      cell.textContent = MAT[i][j];
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function resetCellStyles() {
+  const n = MAT.length, m = MAT[0].length;
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < m; j++) {
+      const cell = document.getElementById(`cell-${i}-${j}`);
+      if (cell) cell.className = 'mat-cell';
+    }
+}
+
+// ─────────────────────────────────────────────
+// NUMBER LINE
+// ─────────────────────────────────────────────
+let nlMin = 0, nlMax = 100;
+function buildNumberLine(allVals) {
+  const sorted = [...allVals].sort((a, b) => a - b);
+  nlMin = sorted[0] - 1;
+  nlMax = sorted[sorted.length-1] + 1;
+
+  const wrap = document.getElementById('number-line-wrap');
+  wrap.innerHTML = `<div id="nl-bar"></div>`;
+
+  // ticks for distinct vals
+  const distinct = [...new Set(allVals)].sort((a,b)=>a-b);
+  distinct.forEach(v => {
+    const pct = (v - nlMin) / (nlMax - nlMin) * 100;
+    const tick = document.createElement('div');
+    tick.className = 'nl-tick';
+    tick.style.left = pct + '%';
+    wrap.appendChild(tick);
+    const lbl = document.createElement('div');
+    lbl.className = 'nl-val';
+    lbl.style.left = pct + '%';
+    lbl.textContent = v;
+    wrap.appendChild(lbl);
+  });
+
+  // markers
+  ['low','mid','high'].forEach(name => {
+    const m = document.createElement('div');
+    m.className = 'nl-marker';
+    m.id = 'nl-' + name;
+    const colors = {low: 'var(--low-color)', mid: 'var(--mid-color)', high: 'var(--high-color)'};
+    m.style.background = colors[name];
+    m.style.left = '0%';
+    m.style.opacity = '0';
+    const lbl = document.createElement('div');
+    lbl.className = 'nl-marker-label';
+    lbl.style.color = colors[name];
+    lbl.textContent = name;
+    m.appendChild(lbl);
+    wrap.appendChild(m);
+  });
+}
+
+function updateNumberLine(low, high, mid) {
+  const toPos = v => ((v - nlMin) / (nlMax - nlMin) * 100).toFixed(2) + '%';
+  const bar = document.getElementById('nl-bar');
+  if (bar && low !== undefined && high !== undefined) {
+    bar.style.left = toPos(low);
+    bar.style.width = (((high - low) / (nlMax - nlMin)) * 100).toFixed(2) + '%';
+  }
+  const set = (id, v) => {
+    const el = document.getElementById('nl-' + id);
+    if (el) {
+      el.style.left = toPos(v);
+      el.style.opacity = '1';
+    }
+  };
+  if (low !== undefined) set('low', low);
+  if (high !== undefined) set('high', high);
+  if (mid !== undefined) set('mid', mid); else {
+    const el = document.getElementById('nl-mid');
+    if (el) el.style.opacity = '0';
+  }
+}
+
+// ─────────────────────────────────────────────
+// LOG
+// ─────────────────────────────────────────────
+function log(msg, type='info') {
+  const area = document.getElementById('log-area');
+  const div = document.createElement('div');
+  div.className = `log-entry ${type}`;
+  div.innerHTML = msg;
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById('log-area').innerHTML = '';
+}
+
+// ─────────────────────────────────────────────
+// GENERATE ALL STEPS
+// ─────────────────────────────────────────────
+function generateSteps(mat) {
+  const steps = [];
+  const n = mat.length, m = mat[0].length;
+  const push = (s) => steps.push(s);
+
+  // collect all vals
+  const allVals = mat.flat();
+  push({ type:'init', allVals, n, m });
+
+  // Find low/high
+  let low = Infinity, high = -Infinity;
+  push({ type:'code', lines:['l5','l6'], algo:['s1'], log:['Init: low = MAX, high = MIN', 'info'] });
+
+  for (let i = 0; i < n; i++) {
+    push({ type:'loop_init', row: i, lines:['l9'], algo:['s1'], log:[`→ Row ${i}: checking first=${mat[i][0]}, last=${mat[i][m-1]}`, 'info'] });
+    low = Math.min(low, mat[i][0]);
+    high = Math.max(high, mat[i][m-1]);
+    push({ type:'update_lowhigh', low, high, row: i, lines:['l10','l11'], algo:['s1'],
+      log:[`  low = min(prev, ${mat[i][0]}) = <b style="color:var(--low-color)">${low}</b>, high = max(prev, ${mat[i][m-1]}) = <b style="color:var(--high-color)">${high}</b>`, 'highlight'] });
+  }
+
+  const desired = Math.floor((n * m + 1) / 2);
+  push({ type:'desired', desired, low, high, lines:['l14'], algo:['s2'],
+    log:[`desired = (${n}×${m}+1)/2 = <b style="color:var(--yellow)">${desired}</b>`, 'warn'] });
+
+  // binary search
+  let bsIter = 0;
+  while (low < high) {
+    bsIter++;
+    push({ type:'bs_check', low, high, bsIter, lines:['l16'], algo:['s3'],
+      log:[`─── BS Iter ${bsIter}: low=${low} < high=${high} ✓`, 'phase'] });
+
+    const mid = Math.floor((low + high) / 2);
+    push({ type:'bs_mid', low, high, mid, lines:['l17','l18'], algo:['s3'],
+      log:[`  mid = (${low}+${high})/2 = <b style="color:var(--mid-color)">${mid}</b>`, 'highlight'] });
+
+    let count = 0;
+    // upper bound for each row
+    for (let i = 0; i < n; i++) {
+      push({ type:'ub_start', row: i, arr: mat[i], target: mid, low, high, mid, count, lines:['l20','l21'], algo:['s4'],
+        log:[`  upperBound(row[${i}]=[${mat[i].join(',')}], mid=${mid})`, 'info'] });
+
+      // do the upper bound binary search
+      let l = 0, r = mat[i].length;
+      push({ type:'ub_init', row: i, arr: mat[i], l, r, target: mid, lines:['l33'], algo:['s4'] });
+
+      while (l < r) {
+        const ubMid = Math.floor((l + r) / 2);
+        push({ type:'ub_iter', row: i, arr: mat[i], l, r, ubMid, target: mid, lines:['l34','l35'], algo:['s4'],
+          log:[`    UB: l=${l} r=${r} mid=${ubMid} arr[mid]=${mat[i][ubMid]}`, 'info'] });
+
+        if (mat[i][ubMid] <= mid) {
+          l = ubMid + 1;
+          push({ type:'ub_move_l', row: i, arr: mat[i], l, r, ubMid, target: mid, lines:['l36','l37'], algo:['s4'],
+            log:[`    ${mat[i][ubMid]} ≤ ${mid} → l = ${ubMid}+1 = ${l}`, 'highlight'] });
+        } else {
+          r = ubMid;
+          push({ type:'ub_move_r', row: i, arr: mat[i], l, r, ubMid, target: mid, lines:['l38','l39'], algo:['s4'],
+            log:[`    ${mat[i][ubMid]} > ${mid} → r = ${ubMid} = ${r}`, 'info'] });
+        }
+      }
+      count += l;
+      push({ type:'ub_done', row: i, arr: mat[i], l, result: l, count, low, high, mid, lines:['l41','l22'], algo:['s4'],
+        log:[`  → upperBound returns ${l} → count now ${count}`, 'highlight'] });
+    }
+
+    push({ type:'count_check', count, desired, low, high, mid, lines:['l24'], algo:['s5','s6'],
+      log:[`  count=${count} vs desired=${desired}`, 'warn'] });
+
+    if (count < desired) {
+      low = mid + 1;
+      push({ type:'update_low', low, high, mid, count, desired, lines:['l25'], algo:['s5'],
+        log:[`  count < desired → low = mid+1 = <b style="color:var(--low-color)">${low}</b>`, 'highlight'] });
+    } else {
+      high = mid;
+      push({ type:'update_high', low, high, mid, count, desired, lines:['l27'], algo:['s6'],
+        log:[`  count ≥ desired → high = mid = <b style="color:var(--high-color)">${high}</b>`, 'highlight'] });
+    }
+  }
+
+  push({ type:'result', result: low, lines:['l29'], algo:['s7'],
+    log:[`🎯 Median = <b style="color:var(--yellow)">${low}</b> (low == high, loop ends)`, 'success'] });
+
+  return steps;
+}
+
+// ─────────────────────────────────────────────
+// RENDER A STEP
+// ─────────────────────────────────────────────
+function renderStep(step) {
+  totalStepsRun++;
+  document.getElementById('total-steps').textContent = totalStepsRun;
+  if (step.lines) highlightCode(step.lines);
+  if (step.algo) highlightAlgoStep(step.algo);
+  if (step.log) log(...step.log);
+
+  const setPtr = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = (val !== undefined && val !== null && val !== Infinity && val !== -Infinity) ? val : '—';
+  };
+
+  if (step.type === 'init') {
+    buildNumberLine(step.allVals);
+    resetCellStyles();
+    clearLog();
+    setPtr('v-low','—'); setPtr('v-high','—'); setPtr('v-mid','—'); setPtr('v-count','—');
+    document.getElementById('v-desired').textContent = '—';
+    document.getElementById('iter-num').textContent = '—';
+    document.getElementById('ub-calls').textContent = '—';
+    document.getElementById('ub-array').innerHTML = '';
+    document.getElementById('result-banner').style.display = 'none';
+    return;
+  }
+
+  if (step.type === 'update_lowhigh') {
+    setPtr('v-low', step.low); setPtr('v-high', step.high);
+    updateNumberLine(step.low, step.high, undefined);
+    // highlight first and last of this row
+    resetCellStyles();
+    const n = MAT.length, m = MAT[0].length;
+    const c0 = document.getElementById(`cell-${step.row}-0`);
+    const cm = document.getElementById(`cell-${step.row}-${m-1}`);
+    if (c0) c0.classList.add('scanning');
+    if (cm) cm.classList.add('scanning');
+    return;
+  }
+
+  if (step.type === 'desired') {
+    setPtr('v-low', step.low); setPtr('v-high', step.high);
+    document.getElementById('v-desired').textContent = step.desired;
+    updateNumberLine(step.low, step.high, undefined);
+    return;
+  }
+
+  if (step.type === 'bs_check' || step.type === 'bs_mid') {
+    document.getElementById('iter-num').textContent = step.bsIter || document.getElementById('iter-num').textContent;
+    document.getElementById('ub-calls').textContent = 0;
+    setPtr('v-low', step.low); setPtr('v-high', step.high);
+    if (step.mid !== undefined) { setPtr('v-mid', step.mid); updateNumberLine(step.low, step.high, step.mid); }
+    else updateNumberLine(step.low, step.high, undefined);
+    setPtr('v-count', step.count || 0);
+    resetCellStyles();
+    document.getElementById('ub-array').innerHTML = '';
+    return;
+  }
+
+  if (step.type === 'ub_start') {
+    setPtr('v-low', step.low); setPtr('v-high', step.high); setPtr('v-mid', step.mid); setPtr('v-count', step.count);
+    updateNumberLine(step.low, step.high, step.mid);
+    // highlight scanning row
+    resetCellStyles();
+    const m = MAT[0].length;
+    for (let j = 0; j < m; j++) {
+      const c = document.getElementById(`cell-${step.row}-${j}`);
+      if (c) c.classList.add('scanning');
+    }
+    // increment ub calls display
+    const ubCallsEl = document.getElementById('ub-calls');
+    ubCallsEl.textContent = parseInt(ubCallsEl.textContent || 0) + 1;
+    return;
+  }
+
+  if (['ub_init','ub_iter','ub_move_l','ub_move_r'].includes(step.type)) {
+    renderUB(step);
+    return;
+  }
+
+  if (step.type === 'ub_done') {
+    setPtr('v-count', step.count);
+    // mark counted cells
+    resetCellStyles();
+    const m = MAT[0].length;
+    for (let j = 0; j < m; j++) {
+      const c = document.getElementById(`cell-${step.row}-${j}`);
+      if (!c) continue;
+      if (MAT[step.row][j] <= step.low || j < step.result) {
+        c.classList.add('counted');
+      }
+    }
+    // Show ub result
+    const ubEl = document.getElementById('ub-array');
+    const res = document.createElement('div');
+    res.id = 'ub-result';
+    res.textContent = `→ returns ${step.result}`;
+    const existing = ubEl.querySelector('#ub-result');
+    if (existing) existing.remove();
+    ubEl.appendChild(res);
+    return;
+  }
+
+  if (step.type === 'count_check') {
+    setPtr('v-count', step.count);
+    setPtr('v-low', step.low); setPtr('v-high', step.high); setPtr('v-mid', step.mid);
+    return;
+  }
+
+  if (step.type === 'update_low' || step.type === 'update_high') {
+    setPtr('v-low', step.low); setPtr('v-high', step.high); setPtr('v-mid', step.mid);
+    updateNumberLine(step.low, step.high, step.mid);
+    return;
+  }
+
+  if (step.type === 'result') {
+    resetCellStyles();
+    // find and highlight result cell
+    const n = MAT.length, m = MAT[0].length;
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < m; j++)
+        if (MAT[i][j] === step.result) {
+          const c = document.getElementById(`cell-${i}-${j}`);
+          if (c) { c.classList.add('result'); }
+        }
+    setPtr('v-low', step.result); setPtr('v-high', step.result); setPtr('v-mid', step.result);
+    const banner = document.getElementById('result-banner');
+    banner.textContent = `🎯 Median = ${step.result}`;
+    banner.style.display = 'block';
+    document.getElementById('iter-num').textContent = '✓';
+    updateNumberLine(step.result, step.result, step.result);
+    return;
+  }
+}
+
+function renderUB(step) {
+  const ubEl = document.getElementById('ub-array');
+  ubEl.innerHTML = '';
+  const arr = step.arr;
+  for (let i = 0; i <= arr.length; i++) {
+    const c = document.createElement('div');
+    c.className = 'ub-cell';
+    c.textContent = i < arr.length ? arr[i] : '|';
+    if (i === step.l) c.classList.add('ub-l');
+    if (i === step.r) c.classList.add('ub-r');
+    if (step.ubMid !== undefined && i === step.ubMid) c.classList.add('ub-mid');
+    if (step.ubMid !== undefined && i <= step.ubMid && arr[i] <= step.target) c.classList.add('ub-lte');
+    ubEl.appendChild(c);
+    if (i === step.l) {
+      const arr2 = document.createElement('div');
+      arr2.className = 'ptr-arrow';
+      arr2.style.color = 'var(--low-color)';
+      arr2.textContent = 'l';
+      c.appendChild(arr2);
+    }
+    if (i === step.r) {
+      const arr3 = document.createElement('div');
+      arr3.className = 'ptr-arrow';
+      arr3.style.color = 'var(--high-color)';
+      arr3.textContent = 'r';
+      c.appendChild(arr3);
+    }
+    if (step.ubMid !== undefined && i === step.ubMid) {
+      const arr4 = document.createElement('div');
+      arr4.className = 'ptr-arrow';
+      arr4.style.color = 'var(--mid-color)';
+      arr4.textContent = 'mid';
+      c.appendChild(arr4);
+    }
+  }
+  // target label
+  const tgt = document.createElement('div');
+  tgt.id = 'ub-result';
+  tgt.style.color = 'var(--mid-color)';
+  tgt.textContent = `target=${step.target}`;
+  ubEl.appendChild(tgt);
+}
+
+// ─────────────────────────────────────────────
+// CONTROLS
+// ─────────────────────────────────────────────
+function getDelay() {
+  const v = parseInt(document.getElementById('speed').value);
+  return [1200, 800, 500, 250, 100][v - 1];
+}
+
+document.getElementById('speed').addEventListener('input', function() {
+  document.getElementById('speed-label').textContent = this.value + 'x';
+});
+
+document.getElementById('btn-play').addEventListener('click', () => {
+  if (playTimer) {
+    stopPlay();
+  } else {
+    startPlay();
+  }
+});
+
+document.getElementById('btn-step').addEventListener('click', () => {
+  stopPlay();
+  if (stepIdx < steps.length) {
+    renderStep(steps[stepIdx++]);
+    updatePlayBtn();
+  }
+});
+
+document.getElementById('btn-reset').addEventListener('click', reset);
+
+function startPlay() {
+  document.getElementById('btn-play').textContent = '⏸ Pause';
+  function tick() {
+    if (stepIdx < steps.length) {
+      renderStep(steps[stepIdx++]);
+      updatePlayBtn();
+      playTimer = setTimeout(tick, getDelay());
+    } else {
+      stopPlay();
+    }
+  }
+  tick();
+}
+
+function stopPlay() {
+  if (playTimer) { clearTimeout(playTimer); playTimer = null; }
+  document.getElementById('btn-play').textContent = '▶ Play';
+}
+
+function updatePlayBtn() {
+  if (stepIdx >= steps.length) {
+    document.getElementById('btn-play').textContent = '▶ Play';
+    document.getElementById('btn-play').disabled = true;
+    document.getElementById('btn-step').disabled = true;
+  }
+}
+
+function reset() {
+  stopPlay();
+  stepIdx = 0;
+  totalStepsRun = 0;
+  document.getElementById('btn-play').disabled = false;
+  document.getElementById('btn-step').disabled = false;
+  document.getElementById('btn-play').textContent = '▶ Play';
+  steps = generateSteps(MAT);
+  buildMatrix();
+  buildNumberLine(MAT.flat());
+  resetCellStyles();
+  clearLog();
+  document.getElementById('result-banner').style.display = 'none';
+  document.getElementById('v-low').textContent = '—';
+  document.getElementById('v-high').textContent = '—';
+  document.getElementById('v-mid').textContent = '—';
+  document.getElementById('v-count').textContent = '—';
+  document.getElementById('v-desired').textContent = '—';
+  document.getElementById('iter-num').textContent = '—';
+  document.getElementById('ub-calls').textContent = '—';
+  document.getElementById('ub-array').innerHTML = '';
+  document.getElementById('total-steps').textContent = '0';
+  highlightCode([]);
+  highlightAlgoStep([]);
+}
+
+// ─────────────────────────────────────────────
+// CUSTOM MATRIX INPUT
+// ─────────────────────────────────────────────
+function toggleCustom() {
+  const sec = document.getElementById('custom-section');
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+  if (sec.style.display === 'block') buildCustomInputs();
+}
+
+function buildCustomInputs() {
+  const container = document.getElementById('row-inputs');
+  container.innerHTML = '';
+  MAT.forEach((row, i) => {
+    const div = document.createElement('div');
+    div.className = 'matrix-input-row';
+    div.innerHTML = `<label>Row ${i}:</label><input id="row-input-${i}" value="${row.join(', ')}" placeholder="sorted numbers e.g. 1, 3, 5">`;
+    container.appendChild(div);
+  });
+  // add/remove row buttons
+  const btns = document.createElement('div');
+  btns.style.cssText = 'display:flex;gap:8px;margin-top:6px;';
+  btns.innerHTML = `
+    <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="addRow()">+ Row</button>
+    <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="removeRow()">- Row</button>
+  `;
+  container.appendChild(btns);
+}
+
+function addRow() {
+  const m = MAT[0].length;
+  MAT.push(Array(m).fill(1));
+  buildCustomInputs();
+}
+function removeRow() {
+  if (MAT.length > 1) { MAT.pop(); buildCustomInputs(); }
+}
+
+function applyCustom() {
+  const n = MAT.length;
+  const newMat = [];
+  for (let i = 0; i < n; i++) {
+    const inp = document.getElementById(`row-input-${i}`);
+    if (!inp) continue;
+    const vals = inp.value.split(',').map(v => parseInt(v.trim())).filter(v => !isNaN(v));
+    if (vals.length === 0) { alert(`Row ${i} is empty or invalid`); return; }
+    newMat.push(vals);
+  }
+  // validate same length
+  const len = newMat[0].length;
+  for (let i = 1; i < newMat.length; i++) {
+    if (newMat[i].length !== len) { alert('All rows must have same length'); return; }
+  }
+  // validate sorted
+  for (let i = 0; i < newMat.length; i++) {
+    for (let j = 1; j < newMat[i].length; j++) {
+      if (newMat[i][j] < newMat[i][j-1]) { alert(`Row ${i} is not sorted!`); return; }
+    }
+  }
+  // validate odd total
+  if ((newMat.length * newMat[0].length) % 2 === 0) {
+    alert('Total elements (n×m) must be odd for a unique median.');
+    return;
+  }
+  MAT = newMat;
+  toggleCustom();
+  reset();
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+buildCode();
+buildAlgoSteps();
+reset();
+</script>
+</body>
+</html>

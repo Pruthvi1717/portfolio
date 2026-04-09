@@ -26,20 +26,13 @@ export const machineLearning = [
 export const programmingLanguages = [
   { name: "Java", logo: "/logos/java.png" },
   { name: "Python", logo: "/logos/python.png" },
-  
-  { name: "C", logo: "/logos/c.png" },
   { name: "JavaScript", logo: "/logos/javascript.png" },
-  { name: "C++", logo: "/logos/cpp.png" },
-  { name: "TypeScript", logo: "/logos/typescript.png" },
-  { name: "Go", logo: "/logos/go.png" },
-  { name: "Bash", logo: "/logos/bash.png" },
+  
 ];
 export const Databases = [
   { name: "MySQL", logo: "/logos/sql.png" },
   { name: "MongoDB", logo: "/logos/mongodb.png" },
-  { name: "PostgreSQL", logo: "/logos/postgree.png" },
   { name: "Restful Apis", logo: "/logos/api.png" },
-  { name: "firebase", logo: "/logos/firebase.png" },
   { name: "Cloudinary", logo: "/logos/Cloudinary.svg" },
   
 ];
@@ -47,9 +40,9 @@ export const toolsAndPlatforms = [
   { name: "Git", logo: "/logos/git.png" },
   { name: "GitHub", logo: "/logos/github.png" },
   { name: "VS Code", logo: "/logos/vscode.png" },
-  { name: "Excel", logo: "/logos/excel.png" },
+  
   { name: "PPT", logo: "/logos/powerpoint.png" },
-  { name: "AWS", logo: "/logos/aws.png" },
+  
 ];
 
 

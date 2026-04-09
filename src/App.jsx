@@ -8,6 +8,8 @@ import EducationDashboard from "./Education/EducationDashboard";
 import Certifications from "./Components/Certifications/Certifications";
 import ChatbotWidget from "./Components/ChatbotWidget";
 import CursorGlow from "./Components/CursorGlow";
+import AuroraBackground from "./Components/AuroraBackground";
+import Locker from "./Components/Locker/Locker";
 import "./App.css";
 
 const App = () => {
@@ -15,6 +17,9 @@ const App = () => {
 
   return (
     <>
+      {/* Persistent aurora behind every page */}
+      <AuroraBackground />
+
       <CursorGlow />
       <LandingPage setActivePage={setActivePage} />
 
@@ -48,6 +53,12 @@ const App = () => {
       {activePage === "certifications" && (
         <section className="section">
           <Certifications />
+        </section>
+      )}
+
+      {activePage === "locker" && (
+        <section className="section">
+          <Locker />
         </section>
       )}
 

@@ -24,6 +24,7 @@ const LandingPage = ({ setActivePage }) => {
           <li onClick={() => handleNavClick("skills")}>Skills</li>
           <li onClick={() => handleNavClick("projects")}>Projects</li>
           <li onClick={() => handleNavClick("certifications")}>Certificates</li>
+          <li onClick={() => handleNavClick("locker")}>Locker</li>
         </ul>
 
         <div className="socialMedia">
@@ -60,6 +61,7 @@ const LandingPage = ({ setActivePage }) => {
             <li onClick={() => handleNavClick("skills")}>Skills</li>
             <li onClick={() => handleNavClick("projects")}>Projects</li>
             <li onClick={() => handleNavClick("certifications")}>Certificates</li>
+            <li onClick={() => handleNavClick("locker")}>Locker</li>
           </ul>
         </div>
       )}

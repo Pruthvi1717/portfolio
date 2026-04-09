@@ -20,21 +20,18 @@ body {
   width: 100%;
   min-height: 100vh;
   position: relative;
+  z-index: 1; /* sits above the starfield canvas (z-index: 0) */
   margin-top: 20px;
 }
 
 /* ===== HOME SECTION (SHARED CANVAS) ===== */
 .home {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 10, 1) 0%,
-    rgba(18, 18, 28, 1) 100%
-  );
+  /* Background removed — starfield canvas provides the dark fill now */
   position: relative;
   overflow: hidden;
 }
 
-/* Shared glow (matches Left + Right) */
+/* Shared glow (matches Left + Right) — keep these, they layer nicely on top */
 .home::before {
   content: "";
   position: absolute;
@@ -50,6 +47,7 @@ body {
   border-radius: 50%;
   animation: floatBg 18s ease-in-out infinite;
   pointer-events: none;
+  z-index: 0;
 }
 
 .home::after {
@@ -67,6 +65,7 @@ body {
   border-radius: 50%;
   animation: floatBg 14s ease-in-out infinite reverse;
   pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes floatBg {
@@ -109,5 +108,65 @@ body {
     justify-content: center;
     gap: 70px;
     padding: 90px 24px;
+  }
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Poppins", sans-serif;
+}
+
+/* ── Root background matches aurora base ── */
+html, body, #root {
+  background: #03050f;
+  min-height: 100vh;
+  color: #f3f4f6;
+}
+
+/* ── All page sections: transparent so aurora bleeds through ── */
+.section {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.section.home {
+  padding-top: 70px;
+}
+
+.landing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: calc(100vh - 70px);
+  padding: 0 8vw;
+  gap: 40px;
+}
+
+/* ── Smooth page-switch fade-in ── */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section {
+  animation: pageFadeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .landing {
+    flex-direction: column;
+    padding: 0 24px;
+    justify-content: center;
+    gap: 32px;
   }
 }
