@@ -130,11 +130,11 @@ const KNOWLEDGE_BASE = [
       "Pruthvi has two certifications from Scaler Topics — Operating System Fundamentals and Computer Networking (Master Networking), both earned in 2026, which round out his CS fundamentals knowledge.",
   },
 
-  // HIRE / AVAILABLE
+  // GAMES
   {
-    keywords: ["hire", "available", "open to work", "opportunity", "job", "freelance"],
+    keywords: ["games", "play", "game", "fun", "entertainment"],
     answer:
-      "Pruthvi is open to opportunities! The best way to connect is via LinkedIn or through the Connect button on the portfolio. Feel free to reach out for full-time roles, freelance projects, or collaborations.",
+      "🎮 Here are the games available:\n\n1. 🎯 Tic Tac Toe - Classic 3x3 grid game\n2. 🐍 Snake - Control the snake to eat food and grow\n3. 🧠 Memory Game - Match pairs of cards\n4. ✂️ Rock Paper Scissors - Play against the computer\n5. 🔢 Number Guessing - Guess the secret number\n\nJust type the number (1-5) to start playing!",
   },
 ];
 
@@ -162,15 +162,6 @@ const getBotReply = (userText) => {
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 
-const SECRET_COMMANDS = [
-  "open locker",
-  "unlock locker",
-  "open the locker",
-  "unlock the locker",
-  "secret locker",
-  "secret code",
-];
-
 const ChatbotWidget = ({ setActivePage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState(DEFAULT_MESSAGES);
@@ -192,16 +183,18 @@ const ChatbotWidget = ({ setActivePage }) => {
     const trimmed = input.trim();
     if (!trimmed) return;
 
-    const normalized = trimmed.toLowerCase();
-    const isSecret = SECRET_COMMANDS.some((command) => normalized.includes(command));
-
     const userMsg = { sender: "user", text: trimmed };
 
-    if (isSecret) {
-      setActivePage?.("locker");
+    // Check for game selection by number
+    const gameNumber = parseInt(trimmed);
+    if (gameNumber >= 1 && gameNumber <= 5) {
+      const gameIds = ['tictactoe', 'snake', 'memory', 'rps', 'numberguess'];
+      const selectedGameId = gameIds[gameNumber - 1];
+      setActivePage?.(`game-${selectedGameId}`);
+      const gameNames = ['Tic Tac Toe', 'Snake', 'Memory Game', 'Rock Paper Scissors', 'Number Guessing'];
       const botMsg = {
         sender: "bot",
-        text: "Secret locker access granted. Enter the locker password to view hidden documents.",
+        text: `🎮 Opening ${gameNames[gameNumber - 1]}! Have fun playing!`,
       };
       setMessages((prev) => [...prev, userMsg, botMsg]);
       setInput("");
@@ -214,7 +207,7 @@ const ChatbotWidget = ({ setActivePage }) => {
   };
 
   // Quick suggestion chips
-  const SUGGESTIONS = ["Skills", "Projects", "Certifications", "Contact"];
+  const SUGGESTIONS = ["Skills", "Projects", "Certifications", "Games", "Contact"];
 
   const handleSuggestion = (text) => {
     const userMsg = { sender: "user", text };

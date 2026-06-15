@@ -1,4 +1,14 @@
 const projectsData = [
+
+  {
+    image: "/ProjectImages/Appoint.png",
+    title: "Simran - AI Voice Agent for Doctor Appointments",
+    description:
+      "using a Node.js pipeline with Deepgram (speech-to-text), Groq LLaMA (conversation logic), and Sarvam AI (text-to-speech).",
+    skills: ["Javascript","Deepgram", "Sarvam", "Node.js", "Express js", "Agent", "AI"],
+    liveLink: "https://doctorsai-2.onrender.com/",
+    githubLink: "https://github.com/Pruthvi1717/DoctorsAI",
+  },
   {
     image: "/ProjectImages/image.png",
     title: "WanderLust (Airbnb like)",

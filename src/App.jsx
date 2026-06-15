@@ -6,10 +6,10 @@ import SkillPage from "./Components/Skills/SkillPage";
 import ProjectsMainPage from "./Components/Projects/ProjectsMainPage";
 import EducationDashboard from "./Education/EducationDashboard";
 import Certifications from "./Components/Certifications/Certifications";
+import Games from "./Components/Games/Games";
 import ChatbotWidget from "./Components/ChatbotWidget";
 import CursorGlow from "./Components/CursorGlow";
 import AuroraBackground from "./Components/AuroraBackground";
-import Locker from "./Components/Locker/Locker";
 import "./App.css";
 
 const App = () => {
@@ -56,9 +56,9 @@ const App = () => {
         </section>
       )}
 
-      {activePage === "locker" && (
+      {activePage.startsWith("game-") && (
         <section className="section">
-          <Locker />
+          <Games selectedGame={activePage.replace("game-", "")} setActivePage={setActivePage} />
         </section>
       )}
 
