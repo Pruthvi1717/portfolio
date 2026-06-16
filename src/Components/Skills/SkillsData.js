@@ -11,6 +11,7 @@ export const webdev = [
   { name: "Express", logo: "/logos/express.png" },
   { name: "MongoDB", logo: "/logos/mongodb.png" },
   { name: "Github", logo: "/logos/github.png" },
+
 ];
 
 export const machineLearning = [
@@ -34,6 +35,7 @@ export const Databases = [
   { name: "MongoDB", logo: "/logos/mongodb.png" },
   { name: "Restful Apis", logo: "/logos/api.png" },
   { name: "Cloudinary", logo: "/logos/Cloudinary.svg" },
+  { name: "Redis", logo: "/logos/redis.png" },
   
 ];
 export const toolsAndPlatforms = [
