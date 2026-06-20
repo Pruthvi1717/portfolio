@@ -21,6 +21,7 @@ const App = () => {
       <AuroraBackground />
 
       <CursorGlow />
+      
       <LandingPage setActivePage={setActivePage} />
 
       {activePage === "home" && (
@@ -58,7 +59,10 @@ const App = () => {
 
       {activePage.startsWith("game-") && (
         <section className="section">
-          <Games selectedGame={activePage.replace("game-", "")} setActivePage={setActivePage} />
+          <Games
+            selectedGame={activePage.replace("game-", "")}
+            setActivePage={setActivePage}
+          />
         </section>
       )}
 
